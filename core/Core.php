@@ -7,7 +7,7 @@ class Core {
 	public $plugins=array( array() );
 
 	protected function parseurl( $string=NULL ) {
-		if ( $string==NULL )$string="welcome/view";
+		if ( $string===NULL )$string="welcome/view";
 		$url=isset( $_GET['url'] )? strip_tags( $_GET['url'] ) :$string;
 		$url=$this->seperateslash( $url );
 		$url[1]=isset( $url[1] )?$url[1]:"view";//method
@@ -15,11 +15,12 @@ class Core {
 		return $url;
 	}
 	protected function arraytourl( $value=NULL ) {
+
 		if ( $value==NULL||( !is_array( $value ) ) )
 			$value=array( 'welcome', 'view' );
 		array_filter( $value );
-		if ( !isset( $value[0] ) )
-			$value[0]="welcome";
+		if ( !isset( $value[0] ) ) 
+			$value[0]="welcome";  
 		if ( !isset( $value[1] ) )
 			$value[1]="view";
 		if ( !isset( $value[2] ) )
@@ -52,20 +53,28 @@ class Core {
 	 */
 
 	public function addplugin( $index=NULL, $link=NULL ) {
-		if ( ( $link==NULL )||( $index==NULL ) )
+		if ( ( $link===NULL )||( $index===NULL ) )
 			return false;
-		array_push( $this->plugins[$index], $link );
+		if(!isset($this->plugins[$index]))
+			$this->plugins[$index]=array();
+		array_push( $this->plugins[$index], $link ); 
+
 		return true;
 	}
 	public function putplugin( $index=NULL ) {
-		if ( $index==NULL )
+		if ( $index===NULL )
 			return false;
 		$ret=false;
+
 		if ( !isset( $this->plugins[$index] ) )
-			return false;
+			{
+				$this->plugins[$index][0]=$this->config["plugin"].$index.".php"; 
+			}
+
 		foreach ( $this->plugins[$index] as $key => $value ) {
 			if ( file_exists( $value ) ) {
 				$ret=true;
+				$plugin=&$this;
 				include "$value";
 				log_message( "info", " {$value} included " );
 			}

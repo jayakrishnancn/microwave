@@ -5,8 +5,29 @@ defined( 'BASEPATH' ) or exit( 'No direct script access allowed' );
  */
 class Security {
 	private $iptxt='deniedips.txt';
-
-
+//from CI
+protected $_never_allowed_str =	array(
+		'document.cookie'	=> '[removed]',
+		'document.write'	=> '[removed]',
+		'.parentNode'		=> '[removed]',
+		'.innerHTML'		=> '[removed]',
+		'-moz-binding'		=> '[removed]',
+		'<!--'				=> '&lt;!--',
+		'-->'				=> '--&gt;',
+		'<![CDATA['			=> '&lt;![CDATA[',
+		'<comment>'			=> '&lt;comment&gt;'
+	);
+protected $_never_allowed_regex = array(
+		'javascript\s*:',
+		'(document|(document\.)?window)\.(location|on\w*)',
+		'expression\s*(\(|&\#40;)', // CSS and IE
+		'vbscript\s*:', // IE, surprise!
+		'wscript\s*:', // IE
+		'jscript\s*:', // IE
+		'vbs\s*:', // IE
+		'Redirect\s+30\d',
+		"([\"'])?data\s*:[^\\1]*?base64[^\\1]*?,[^\\1]*?\\1?"
+	);
 	function __construct() {
 		log_message( "info", "in Security.php" );
 		if (session_status() == PHP_SESSION_NONE) {
@@ -166,6 +187,65 @@ class Security {
 
 
 
+	/*
+	*    csrf protectoin follows
+	*
+	*
+	*
+	*/
+/*
+*	uses sha1
+*	use Security::get_csrf_token() to generete csrf token
+*/
+/*
+*	mostof them taken from codeignater 
+*/
+	public function xss_clean($str=NULL)
+	{
+		if($str==NULL)
+			return false;
 
+		// Is the string an array?
+		if (is_array($str))
+		{
+			while (list($key) = each($str))
+			{
+				$str[$key] = $this->xss_clean($str[$key]);
+			}
 
+			return $str;
+		}
+		do
+		{
+		$str = rawurldecode($str);
+		}
+		while (preg_match('/%[0-9a-f]{2,}/i', $str));
+		$str=$this->_do_never_allowed($str);
+		return $str;
+
+	}
+	protected function _do_never_allowed($str)
+	{
+		$str = str_replace(array_keys($this->_never_allowed_str), $this->_never_allowed_str, $str);
+
+		foreach ($this->_never_allowed_regex as $regex)
+		{
+			$str = preg_replace('#'.$regex.'#is', '[removed]', $str);
+		}
+
+		return $str;
+	}
+
+	// ----------------------CI------------------------------------------
+
+	/**
+	 * Strip Image Tags
+	 *
+	 * @param	string	$str
+	 * @return	string
+	 */
+	public function strip_image_tags($str)
+	{
+		return preg_replace(array('#<img[\s/]+.*?src\s*=\s*["\'](.+?)["\'].*?\>#', '#<img[\s/]+.*?src\s*=\s*(.+?).*?\>#'), '\\1', $str);
+	}
 }

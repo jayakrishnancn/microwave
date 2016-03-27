@@ -5,9 +5,10 @@
  */
 class Bootstrap extends Core
 {
-	private    $url			=NULL;
+	private    $url			="welcome/view";
 	private    $guard		=NULL;
 	protected  $Config  	=NULL;
+	public 		$cache 		=NULL;
 	protected  $controller  ="welcome"; 
 	protected  $method="view"; 
 
@@ -56,6 +57,7 @@ class Bootstrap extends Core
 			log_message( "info", "apps/Router.php included" );
 
 			$this->url=$route->url;
+
 			$this->url=$this->arraytourl( $this->url );
 
 			/*
@@ -122,10 +124,9 @@ class Bootstrap extends Core
 		if(file_exists($config['controller'].$this->url[0].'.php'))
 		{
 			$this->controller=$this->url[0];
-		}
-		else
-		{
-			$this->controller='welcome'; 
+		} 
+		else{
+			$this->controller='error'; 
 		}
 		unset($this->url[0]);
 
@@ -172,6 +173,7 @@ class Bootstrap extends Core
 			array_push($thispageurl,$this->method);
 			unset($this->url[1]);
 
+ 
 		$this->url=array_filter($this->url);
 		$thispageurl=array_merge($thispageurl,$this->url);
 		$this->param=$this->url?array_values($this->url):[];
@@ -180,11 +182,11 @@ class Bootstrap extends Core
 
  		/*
  		* cache.php start here 
- 		*/
+ 		*/ 
 if ( $this->putplugin( "cache/cache_start" ) )
 			log_message( "info", "plugin [cache_end] added" );
 
-
+ 
 
 		$this->controller->{$this->method}($this->param);
 

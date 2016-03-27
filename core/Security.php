@@ -34,6 +34,29 @@ protected $_never_allowed_regex = array(
 			session_start();
 			log_message("info","session started");
 		}
+		/*
+		*   to prevent Session Stealing with javascript
+		*/
+		ini_set('session.cookie_httponly', 1); 
+		        @log_message("info","session.cookie_httponly set to 1");
+
+		/*  session start here */  
+
+		/*
+		*   to prevent Session Fixation
+		*  regenerate sessionid each  20 request (counted bcoz if freq used may lead to over head and slow the web )
+		*
+		*/
+		    if(!isset($_SESSION['session_request_count']))$_SESSION['session_request_count'] = 0;
+
+		if (++$_SESSION['session_request_count'] >= 20) {
+		    $_SESSION['session_request_count'] = 0;
+		    session_regenerate_id(true);
+		    @log_message("info","session_request_count set to 0 and id regenerated ");
+		}
+		@log_message("info","session_request_count increased to ".$_SESSION['session_request_count']." ");
+		 
+
 	}
 
 /*

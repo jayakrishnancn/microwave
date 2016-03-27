@@ -16,7 +16,7 @@ class cache{
 	{
 		$this->cachedir=isset($arr['dir'])?$arr['dir']:'./cache/'; //dir to cache files
 
-		$this->cachetime=isset($arr['time'])?$arr['time']:60; //seconds to cache files for
+		$this->cachetime=isset($arr['time'])?$arr['time']:600; //seconds to cache files for
 
 		$this->cacheext  =isset($arr['ext'])?$arr['ext']:'htm'; //extension to give cached files
 
@@ -102,14 +102,17 @@ class cache{
 			die();
 		}
 		ob_start();
+		log_message("cache","ob started");
 	}
 	public function end_cache()
 	{
 		if($this->ignore_page==false)
-		{
+		{ 
 			$this->write_file($this->cachefile,ob_get_contents());
 			ob_end_flush();
 		}
+		log_message("cache","ob ob ended");
+
 	} 
 	public function delete_cache($file=null,$ext='cache',$hash=true)
 	{

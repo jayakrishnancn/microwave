@@ -11,12 +11,21 @@ class Controller{
 	} 
 
 	public function _view($url=[],$data=[])
-	{ 
-		$title=(!empty($config['title']))?$config['title']:"Microwave";
-		if(isset($data))
+	{  
+		log_message("info","in __view ");
+		$title=(!empty($this->config['title']))?$this->config['title']:"Microwave";
+	
+		if(isset($data)){
 			foreach ($data as $key => $value) {
 				$$key=$value; 
 			}
+		}
+		if(is_array($url))
+			if(!array_key_exists('config', $data))
+			{
+				$config=$this->config;
+			}
+
 		if(is_array($url))
 		foreach ($url as $value)
 		{
@@ -24,6 +33,7 @@ class Controller{
 			if(file_exists($this->config['view'].$value.".php"))
 			{ 
 				require_once  $this->config['view'].$value.".php";
+				log_message("info","includeed {$value}.php");
  			}
 			else 
 				log_message("error","$value not found");

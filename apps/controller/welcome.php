@@ -17,9 +17,8 @@ class welcome extends controller
 	public function view($value='')
 	{
   		log_message("info","entered in home welcome view"); 
-  		$data=['title'=>"IEEE SCTCE  | Home"];
-      $view_location="views";
-  		$this->_view($view_location,$data);
+  		$data=['title'=>"Title"]; 
+  		$this->_view(["common_start","public_nav","common_end"],$data);
   	}
 	 
 	

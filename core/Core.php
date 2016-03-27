@@ -21,6 +21,11 @@ class Core {
 		array_filter( $value );
 		if ( !isset( $value[0] ) ) 
 			$value[0]="welcome";  
+		if( ($value[0]==="x")&&(empty($value[1])))
+		{
+			$value[0]="welcome";
+			$value[1]="view";
+		}
 		if ( !isset( $value[1] ) )
 			$value[1]="view";
 		if ( !isset( $value[2] ) )

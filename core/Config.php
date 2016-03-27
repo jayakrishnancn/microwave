@@ -8,7 +8,7 @@ if( (!defined("BASEPATH") )   )
 /* settings */
 
 
-$config["DEBUG"]=true;/*false*/
+$config["DEBUG"]=false;/*false*/
 $config["SHOWLOG"]=true;
 $config["session_max_time"]=60*2; 
 $config["refurl"]=isset($_SERVER["HTTP_REFERER"])?$_SERVER["HTTP_REFERER"]:null;
@@ -24,13 +24,14 @@ $folder=array(
 "cache"=>BASEPATH."cache/",
 
 "controller"=>BASEPATH."apps/controller/",
-"css"=>BASEPATH."apps/css/",
-"image"=>BASEPATH."apps/image/",
-"js"=>BASEPATH."apps/js/",
+"css"=>BASEPATH."apps/assets/css/",
+"image"=>BASEPATH."apps/assets/image/",
+"js"=>BASEPATH."apps/assets/js/",
 "model"=>BASEPATH."apps/model/",
 "vendor"=>BASEPATH."apps/vendor/",
 "view"=>BASEPATH."apps/view/",
-"router"=>BASEPATH."apps/router/", 
+"router"=>BASEPATH."apps/router/",
+"apps-vendors-css"=> BASEPATH."apps/vendor/css/",
 "security"=>BASEPATH."apps/security/",
 
 "config"=>BASEPATH."core/config/",
